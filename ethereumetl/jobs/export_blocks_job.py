@@ -84,7 +84,8 @@ class ExportBlocksJob(BaseJob):
             self.item_exporter.export_item(self.block_mapper.block_to_dict(block))
         if self.export_transactions:
             for tx in block.transactions:
-                self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(tx))
+                if tx.to_address == "0xeda0a92877c9607b5b75ee2be012b4bce2599c81":
+                    self.item_exporter.export_item(self.transaction_mapper.transaction_to_dict(tx))
 
     def _end(self):
         self.batch_work_executor.shutdown()
