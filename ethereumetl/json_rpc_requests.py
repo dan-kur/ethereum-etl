@@ -20,6 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+def generate_aave_health_factor_by_block_json_rpc(tx_batch):
+    """To query health factor data from Aave V2 LendingPool contract"""
+    for i, tx in enumerate(tx_batch):
+        block_number = tx[1]
+        user = tx[2]
+        user = user[2:]
+        yield generate_json_rpc(
+            method="eth_call",
+            # this consists of the methodID hash (8 characters after 0x), address as the argument (last 40), and something from the ABI to specify what the argument type is
+            params=[{"data": f"0xbf92857c000000000000000000000000{user}",
+                     "to": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9"},
+                    hex(block_number)],
+            request_id=i
+        )
 
 def generate_get_block_by_number_json_rpc(block_numbers, include_transactions):
     for idx, block_number in enumerate(block_numbers):
